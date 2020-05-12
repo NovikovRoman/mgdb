@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -28,8 +27,7 @@ func createInterface() (err error) {
 
 	f, err = os.Create(filename)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return
 	}
 
 	defer func() {
