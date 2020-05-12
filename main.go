@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"strings"
 	"text/template"
 )
 
@@ -64,7 +63,7 @@ func main() {
 
 // getPackageName returns the package name from the directory name.
 func getPackageName(dir string) string {
-	return strings.ToLower(filepath.Base(dir))
+	return toSnake(filepath.Base(dir))
 }
 
 // getDir returns a directory of models.

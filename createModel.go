@@ -7,12 +7,13 @@ import (
 )
 
 type dataModel struct {
-	Filename  string
-	Package   string
-	Backtick  string
-	Model     string
-	ModelSymb string
-	TableName string
+	Filename       string
+	Package        string
+	Backtick       string
+	Model          string
+	SliceModelName string
+	ModelSymb      string
+	TableName      string
 }
 
 func createModel() (err error) {
@@ -22,23 +23,27 @@ func createModel() (err error) {
 	}
 
 	modelName := os.Args[2]
-	table := modelName
+	table := toSnake(modelName)
+	sliceModelName := modelName
 	if []rune(table)[len(table)-1] == 's' {
 		table += "es"
+		sliceModelName += "es"
 
 	} else {
 		table += "s"
+		sliceModelName += "s"
 	}
 
 	modelRunes := []rune(modelName)
 
 	data := &dataModel{
-		Filename:  strings.ToLower(string(modelRunes[0])) + string(modelRunes[1:]),
-		Package:   getPackageName(dir),
-		Backtick:  backtick,
-		Model:     strings.Title(modelName),
-		ModelSymb: strings.ToLower(string(modelRunes[0])),
-		TableName: table,
+		Filename:       strings.ToLower(string(modelRunes[0])) + string(modelRunes[1:]),
+		Package:        getPackageName(dir),
+		Backtick:       backtick,
+		Model:          strings.Title(modelName),
+		SliceModelName: sliceModelName,
+		ModelSymb:      strings.ToLower(string(modelRunes[0])),
+		TableName:      table,
 	}
 
 	if err = saveModel(dir, data); err != nil {

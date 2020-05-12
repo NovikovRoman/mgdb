@@ -257,9 +257,9 @@ func (r {{.Model}}Repository) FindByID(id int64) ({{.ModelSymb}} *{{.Model}}, er
 
 // FindAll returns all records from the database.
 func (r {{.Model}}Repository) FindAll() ([]{{.Model}}, error) {
-	var {{.TableName}} []{{.Model}}
-	err := r.db.Select(&{{.TableName}}, "SELECT {{.Backtick}}{{.ModelSymb}}{{.Backtick}}.* FROM {{.Backtick}}"+r.table+"{{.Backtick}}")
-	return {{.TableName}}, err
+	var {{.SliceModelName}} []{{.Model}}
+	err := r.db.Select(&{{.SliceModelName}}, "SELECT {{.Backtick}}{{.ModelSymb}}{{.Backtick}}.* FROM {{.Backtick}}"+r.table+"{{.Backtick}}")
+	return {{.SliceModelName}}, err
 }
 `
 
