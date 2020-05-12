@@ -11,6 +11,7 @@
     - [Model And Repository](#model-and-repository)
     - [JSON Column Structure](#json-column-structure)
 - [Help](#help)
+- [License](#license)
 
 ## Build
 
@@ -73,4 +74,6 @@ Any of the options:
 - `mgdb help`
 - `mgdb -help`
 - `mgdb --help`
- 
+
+## License
+[MIT License](LICENSE) © Roman Novikov
