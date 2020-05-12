@@ -4,14 +4,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 )
 
 func createJsonStruct() (err error) {
-	var f *os.File
-
-	dir := getDir()
-	if err = createDir(dir); err != nil {
+	var dir string
+	if dir, err = getDir(); err != nil {
 		return err
 	}
 
@@ -19,21 +16,6 @@ func createJsonStruct() (err error) {
 	packageName := getPackageName(dir)
 
 	filename := filepath.Join(dir, structName+".go")
-	if err = checkFilename(filename); err != nil {
-		return
-	}
-
-	f, err = os.Create(filename)
-	if err != nil {
-		return
-	}
-
-	defer func() {
-		if derr := f.Close(); derr != nil {
-			err = derr
-		}
-	}()
-
 	data := struct {
 		Package    string
 		Backtick   string
@@ -46,7 +28,6 @@ func createJsonStruct() (err error) {
 		StructSymb: strings.ToLower(string([]rune(structName)[0])),
 	}
 
-	t := template.Must(template.New("").Parse(tmplStringArray))
-	err = t.Execute(f, data)
+	err = saveTemplate(filename, tmplStringArray, data)
 	return
 }

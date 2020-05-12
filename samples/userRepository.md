@@ -18,12 +18,12 @@ func NewUserRepository(db *sqlx.DB) *UserRepository {
 }
 
 // FindByID returns a record from the database by ID.
-func (r UserRepository) FindByID(id int64) (d *User, err error) {
-	d = &User{}
-	err = r.db.Get(d, "SELECT * FROM `"+r.table+"` WHERE `id` = ?", id)
+func (r UserRepository) FindByID(id int64) (u *User, err error) {
+	u = &User{}
+	err = r.db.Get(u, "SELECT * FROM `"+r.table+"` WHERE `id` = ?", id)
 	if err == sql.ErrNoRows {
 		err = nil
-		d = nil
+		u = nil
 	}
 	return
 }

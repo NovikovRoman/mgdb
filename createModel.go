@@ -4,7 +4,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 )
 
 type dataModel struct {
@@ -17,12 +16,12 @@ type dataModel struct {
 }
 
 func createModel() (err error) {
-	modelName := os.Args[2]
-	dir := getDir()
-	if err = createDir(dir); err != nil {
+	var dir string
+	if dir, err = getDir(); err != nil {
 		return err
 	}
 
+	modelName := os.Args[2]
 	table := modelName
 	if []rune(table)[len(table)-1] == 's' {
 		table += "es"
@@ -51,49 +50,13 @@ func createModel() (err error) {
 }
 
 func saveModel(dir string, data *dataModel) (err error) {
-	var fModel *os.File
-
 	filename := filepath.Join(dir, data.Filename+".go")
-	if err = checkFilename(filename); err != nil {
-		return
-	}
-
-	fModel, err = os.Create(filename)
-	if err != nil {
-		return
-	}
-
-	defer func() {
-		if derr := fModel.Close(); derr != nil {
-			err = derr
-		}
-	}()
-
-	t := template.Must(template.New("").Parse(tmplModel))
-	err = t.Execute(fModel, data)
+	err = saveTemplate(filename, tmplModel, data)
 	return
 }
 
 func saveRepository(dir string, data *dataModel) (err error) {
-	var fRepository *os.File
-
 	filename := filepath.Join(dir, data.Filename+"Repository.go")
-	if err = checkFilename(filename); err != nil {
-		return
-	}
-
-	fRepository, err = os.Create(filename)
-	if err != nil {
-		return
-	}
-
-	defer func() {
-		if derr := fRepository.Close(); derr != nil {
-			err = derr
-		}
-	}()
-
-	t := template.Must(template.New("").Parse(tmplRepository))
-	err = t.Execute(fRepository, data)
+	err = saveTemplate(filename, tmplRepository, data)
 	return
 }

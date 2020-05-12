@@ -245,12 +245,12 @@ func New{{.Model}}Repository(db *sqlx.DB) *{{.Model}}Repository {
 }
 
 // FindByID returns a record from the database by ID.
-func (r {{.Model}}Repository) FindByID(id int64) (d *{{.Model}}, err error) {
-	d = &{{.Model}}{}
-	err = r.db.Get(d, "SELECT * FROM {{.Backtick}}"+r.table+"{{.Backtick}} WHERE {{.Backtick}}id{{.Backtick}} = ?", id)
+func (r {{.Model}}Repository) FindByID(id int64) ({{.ModelSymb}} *{{.Model}}, err error) {
+	{{.ModelSymb}} = &{{.Model}}{}
+	err = r.db.Get({{.ModelSymb}}, "SELECT * FROM {{.Backtick}}"+r.table+"{{.Backtick}} WHERE {{.Backtick}}id{{.Backtick}} = ?", id)
 	if err == sql.ErrNoRows {
 		err = nil
-		d = nil
+		{{.ModelSymb}} = nil
 	}
 	return
 }
