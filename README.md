@@ -7,9 +7,9 @@
 - [Table of Contents](#table-of-contents)
 - [Build](#build)
 - [Usage](#usage)
-- [Model Interface](#model-interface)
-- [Model And Repository](#model-and-repository)
-- [JSON Column Structure](#json-column-structure)
+    - [Model Interface](#model-interface)
+    - [Model And Repository](#model-and-repository)
+    - [JSON Column Structure](#json-column-structure)
 - [Help](#help)
 
 ## Build
