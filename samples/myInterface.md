@@ -1,7 +1,7 @@
 # myInterface.go Example
 
 ```go
-package my_dir
+package mydir
 
 import (
 	"database/sql"

@@ -4,14 +4,13 @@
 
 ## Table of Contents
 
-- [Model Generator DB](#model-generator-db)
-  - [Table of Contents](#table-of-contents)
-  - [Build](#build)
-  - [Usage](#usage)
-    - [Model Interface](#model-interface)
-    - [Model And Repository](#model-and-repository)
-    - [JSON Column Structure](#json-column-structure)
-  - [Help](#help)
+- [Table of Contents](#table-of-contents)
+- [Build](#build)
+- [Usage](#usage)
+- [Model Interface](#model-interface)
+- [Model And Repository](#model-and-repository)
+- [JSON Column Structure](#json-column-structure)
+- [Help](#help)
 
 ## Build
 
