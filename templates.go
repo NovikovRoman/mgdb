@@ -191,17 +191,16 @@ func tableFields(values interface{}) (fields []string, err error) {
 
 var tmplModel = `package {{.Package}}
 
-import (
-	//"github.com/jmoiron/sqlx"
-	"time"
-)
+import "time"
 
 type {{.Model}} struct {
 	ID         int64 {{.Backtick}}db:"id"{{.Backtick}}
-
 	CreatedAt time.Time  {{.Backtick}}db:"created_at"{{.Backtick}}
 	UpdatedAt time.Time  {{.Backtick}}db:"updated_at"{{.Backtick}}
 	DeletedAt *time.Time {{.Backtick}}db:"deleted_at"{{.Backtick}}
+
+	// more fields
+    // IgnoreField string {{.Backtick}}db:"-"{{.Backtick}} - ignore field
 }
 
 // interface model -----------------------------
@@ -226,7 +225,7 @@ func ({{.ModelSymb}} {{.Model}}) GetDeletedAt() *time.Time {
 }
 
 // model methods -----------------------------
-// our methods …
+// more methods …
 `
 
 var tmplRepository = `package {{.Package}}

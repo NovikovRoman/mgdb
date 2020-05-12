@@ -3,17 +3,16 @@
 ```go
 package models
 
-import (
-	//"github.com/jmoiron/sqlx"
-	"time"
-)
+import "time"
 
 type User struct {
 	ID         int64 `db:"id"`
-
 	CreatedAt time.Time  `db:"created_at"`
 	UpdatedAt time.Time  `db:"updated_at"`
 	DeletedAt *time.Time `db:"deleted_at"`
+
+    // more fields …
+	// IgnoreField string {{.Backtick}}db:"-"{{.Backtick}} - ignore field
 }
 
 // interface model -----------------------------
@@ -38,6 +37,6 @@ func (u User) GetDeletedAt() *time.Time {
 }
 
 // model methods -----------------------------
-// our methods …
+// more methods …
 
 ```
