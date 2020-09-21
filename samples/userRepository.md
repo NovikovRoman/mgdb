@@ -29,8 +29,8 @@ func (r UserRepository) FindByID(id int64) (u *User, err error) {
 }
 
 // FindAll returns all records from the database.
-func (r UserRepository) FindAll() ([]User, error) {
-	var users []User
+func (r UserRepository) FindAll() ([]*User, error) {
+	var users []*User
 	err := r.db.Select(&users, "SELECT `u`.* FROM `"+r.table+"`")
 	return users, err
 }
