@@ -1,23 +1,16 @@
 package main
 
 import (
-	"os"
 	"path/filepath"
 )
 
 func createInterface() (err error) {
-	var dir string
-	if dir, err = getDir(); err != nil {
+	if err = createDir(*interfacePath); err != nil {
 		return err
 	}
 
-	packageName := getPackageName(dir)
-	name := "interface"
-	if len(os.Args) > 2 {
-		name = os.Args[2]
-	}
-
-	filename := filepath.Join(dir, name+".go")
+	packageName := getPackageName(*interfacePath)
+	filename := filepath.Join(*interfacePath, *interfaceName+".go")
 	data := struct {
 		Package  string
 		Backtick string

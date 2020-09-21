@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -13,68 +15,49 @@ const (
 	defaultDir = "models"
 )
 
+var (
+	initCommand   = kingpin.Command("init", "Creates a model interface.").Alias("i")
+	interfaceName = initCommand.Arg("name", "Interface name (default: interface).").
+		Default("interface").String()
+	interfacePath = initCommand.Arg("path", "Directory path (default: "+defaultDir+").").
+		Default(defaultDir).String()
+
+	jsonStructCommand = kingpin.Command("json-struct", "Creates a structure template for json columns.").
+		Alias("j")
+	jsonStructName = jsonStructCommand.Arg("name", "Structure name.").Required().String()
+	jsonStructPath = jsonStructCommand.Arg("path", "Directory path (default: "+defaultDir+").").
+		Default(defaultDir).String()
+
+	modelCommand = kingpin.Command("model", "Creates a model with a repository.").Alias("m")
+	modelName    = modelCommand.Arg("name", "Model name.").Required().String()
+	modelPath    = modelCommand.Arg("path", "Directory path (default: "+defaultDir+").").
+		Default(defaultDir).String()
+)
+
 func main() {
 	var err error
+	kingpin.HelpFlag.Short('h')
 
-	if len(os.Args) < 2 ||
-		os.Args[1] == "h" || os.Args[1] == "-h" ||
-		os.Args[1] == "help" || os.Args[1] == "-help" || os.Args[1] == "--help" {
-		help(nil)
-		os.Exit(0)
-	}
-
-	switch os.Args[1] {
-
-	// создать директорию для моделей (по-умолчанию models) с интерфесом модели, методами.
-	case "i", "init":
+	switch kingpin.Parse() {
+	case initCommand.FullCommand():
 		err = createInterface()
-		break
 
-	// создать структуру типа []string для json-столбца
-	case "j", "json-struct":
-		if len(os.Args) < 3 {
-			help(errors.New("No structure name specified. "))
-			return
-		}
+	case jsonStructCommand.FullCommand():
 		err = createJsonStruct()
-		break
 
-	// создать модель с репозиторием
-	case "m", "model":
-		if len(os.Args) < 3 {
-			help(errors.New("No model name specified. "))
-			return
-		}
+	case modelCommand.FullCommand():
 		err = createModel()
-		break
-
-	default:
-		help(errors.New("Unknown command. "))
-		os.Exit(1)
 	}
 
 	if err != nil {
-		help(err)
+		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	os.Exit(0)
 }
 
 // getPackageName returns the package name from the directory name.
 func getPackageName(dir string) string {
 	return toSnake(filepath.Base(dir))
-}
-
-// getDir returns a directory of models.
-func getDir() (dir string, err error) {
-	dir = defaultDir
-	if len(os.Args) > 3 {
-		dir = os.Args[3]
-	}
-
-	err = createDir(dir)
-	return
 }
 
 // createDir creates a directory if it does not exist.

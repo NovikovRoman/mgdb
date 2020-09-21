@@ -1,21 +1,17 @@
 package main
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 )
 
 func createJsonStruct() (err error) {
-	var dir string
-	if dir, err = getDir(); err != nil {
+	if err = createDir(*jsonStructPath); err != nil {
 		return err
 	}
 
-	structName := os.Args[2]
-	packageName := getPackageName(dir)
-
-	filename := filepath.Join(dir, structName+".go")
+	packageName := getPackageName(*jsonStructPath)
+	filename := filepath.Join(*jsonStructPath, *jsonStructName+".go")
 	data := struct {
 		Package    string
 		Backtick   string
@@ -24,8 +20,8 @@ func createJsonStruct() (err error) {
 	}{
 		Package:    packageName,
 		Backtick:   backtick,
-		Struct:     strings.Title(structName),
-		StructSymb: strings.ToLower(string([]rune(structName)[0])),
+		Struct:     strings.Title(*jsonStructName),
+		StructSymb: strings.ToLower(string([]rune(*jsonStructName)[0])),
 	}
 
 	err = saveTemplate(filename, tmplStringArray, data)

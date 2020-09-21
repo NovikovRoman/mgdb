@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 )
@@ -17,14 +16,12 @@ type dataModel struct {
 }
 
 func createModel() (err error) {
-	var dir string
-	if dir, err = getDir(); err != nil {
+	if err = createDir(*modelPath); err != nil {
 		return err
 	}
 
-	modelName := os.Args[2]
-	table := toSnake(modelName)
-	sliceModelName := modelName
+	table := toSnake(*modelName)
+	sliceModelName := *modelName
 	if []rune(table)[len(table)-1] == 's' {
 		table += "es"
 		sliceModelName += "es"
@@ -34,23 +31,23 @@ func createModel() (err error) {
 		sliceModelName += "s"
 	}
 
-	modelRunes := []rune(modelName)
+	modelRunes := []rune(*modelName)
 
 	data := &dataModel{
 		Filename:       strings.ToLower(string(modelRunes[0])) + string(modelRunes[1:]),
-		Package:        getPackageName(dir),
+		Package:        getPackageName(*modelPath),
 		Backtick:       backtick,
-		Model:          strings.Title(modelName),
+		Model:          strings.Title(*modelName),
 		SliceModelName: sliceModelName,
 		ModelSymb:      strings.ToLower(string(modelRunes[0])),
 		TableName:      table,
 	}
 
-	if err = saveModel(dir, data); err != nil {
+	if err = saveModel(*modelPath, data); err != nil {
 		return
 	}
 
-	err = saveRepository(dir, data)
+	err = saveRepository(*modelPath, data)
 	return
 }
 
