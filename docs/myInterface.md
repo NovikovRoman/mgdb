@@ -1,9 +1,10 @@
-# Default interface.go
+# myInterface.go Example
 
 ```go
-package models
+package mydir
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -32,14 +33,14 @@ type Model interface {
 	GetDeletedAt() *time.Time
 }
 
-func Create(m Model, db *sqlx.DB) (id int64, err error) {
+func Create(ctx context.Context, db *sqlx.DB, m Model) (id int64, err error) {
 	var (
 		res    sql.Result
 		set    string
 		values string
 	)
 	if m.GetID() > 0 {
-		return Save(m, db)
+		return Save(ctx, db, m)
 	}
 
 	setCreatedAt(m, time.Now())
@@ -53,8 +54,14 @@ func Create(m Model, db *sqlx.DB) (id int64, err error) {
 	if set, values, err = fieldsForInsert(m); err != nil {
 		return
 	}
+    
+    query := "INSERT INTO `"+m.Table()+"` ("+set+") VALUES ("+values+")"
+    if ctx == nil {
+        res, err = db.NamedExec(query, m)
+    } else {
+        res, err = db.NamedExecContext(ctx, query, m)
+    }
 
-	res, err = db.NamedExec("INSERT INTO `"+m.Table()+"` ("+set+") VALUES ("+values+")", m)
 	if err == nil {
 		id, err = res.LastInsertId()
 		setID(m, id)
@@ -62,9 +69,9 @@ func Create(m Model, db *sqlx.DB) (id int64, err error) {
 	return
 }
 
-func Save(m Model, db *sqlx.DB) (id int64, err error) {
+func Save(ctx context.Context, db *sqlx.DB, m Model) (id int64, err error) {
 	if m.GetID() == 0 {
-		return Create(m, db)
+		return Create(ctx, db, m)
 	}
 	setUpdatedAt(m, time.Now())
 
@@ -72,16 +79,23 @@ func Save(m Model, db *sqlx.DB) (id int64, err error) {
 	if sqlSet, err = fieldsForUpdate(m); err != nil {
 		return
 	}
-	_, err = db.NamedExec("UPDATE `"+m.Table()+"` SET "+sqlSet+" WHERE id=:id", m)
+
+    query := "UPDATE `"+m.Table()+"` SET "+sqlSet+" WHERE id=:id"
+    if ctx == nil {
+        _, err = db.NamedExec(query, m)
+    } else {
+        _, err = db.NamedExecContext(ctx, query, m)
+    }
+
 	if err == nil {
 		id = m.GetID()
 	}
 	return
 }
 
-func Update(m Model, db *sqlx.DB) (id int64, err error) {
+func Update(ctx context.Context, db *sqlx.DB, m Model) (id int64, err error) {
 	if m.GetID() > 0 {
-		return Save(m, db)
+		return Save(ctx, db, m)
 	}
 	err = errors.New("This is a new entry. ")
 	return

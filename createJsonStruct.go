@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/NovikovRoman/gmdb/templates"
 	"path/filepath"
 	"strings"
 )
@@ -24,6 +25,6 @@ func createJsonStruct() (err error) {
 		StructSymb: strings.ToLower(string([]rune(*jsonStructName)[0])),
 	}
 
-	err = saveTemplate(filename, tmplStringArray, data)
+	err = saveTemplate(filename, templates.StringArray, data)
 	return
 }

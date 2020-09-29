@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/NovikovRoman/gmdb/templates"
 	"path/filepath"
 )
 
@@ -19,6 +20,6 @@ func createInterface() (err error) {
 		Backtick: backtick,
 	}
 
-	err = saveTemplate(filename, tmplModelInterface, data)
+	err = saveTemplate(filename, templates.Interface, data)
 	return
 }

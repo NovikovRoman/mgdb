@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/NovikovRoman/gmdb/templates"
 	"path/filepath"
 	"strings"
 )
@@ -53,12 +54,12 @@ func createModel() (err error) {
 
 func saveModel(dir string, data *dataModel) (err error) {
 	filename := filepath.Join(dir, data.Filename+".go")
-	err = saveTemplate(filename, tmplModel, data)
+	err = saveTemplate(filename, templates.Model, data)
 	return
 }
 
 func saveRepository(dir string, data *dataModel) (err error) {
 	filename := filepath.Join(dir, data.Filename+"Repository.go")
-	err = saveTemplate(filename, tmplRepository, data)
+	err = saveTemplate(filename, templates.Repository, data)
 	return
 }

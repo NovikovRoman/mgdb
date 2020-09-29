@@ -32,6 +32,10 @@ var (
 	modelName    = modelCommand.Arg("name", "Model name.").Required().String()
 	modelPath    = modelCommand.Arg("path", "Directory path (default: "+defaultDir+").").
 		Default(defaultDir).String()
+
+	migrateCommand = kingpin.Command("migrate", "").Alias("t")
+	migratePath    = migrateCommand.Arg("path", "Directory path (default: migrate).").
+		Default("migrate").String()
 )
 
 func main() {
@@ -47,6 +51,9 @@ func main() {
 
 	case modelCommand.FullCommand():
 		err = createModel()
+
+	case migrateCommand.FullCommand():
+		err = createMigrate()
 	}
 
 	if err != nil {

@@ -10,6 +10,7 @@
     - [Model Interface](#model-interface)
     - [Model And Repository](#model-and-repository)
     - [JSON Column Structure](#json-column-structure)
+    - [Migration Tools](#migration-tools)
 - [Help](#help)
 - [License](#license)
 
@@ -28,12 +29,12 @@ Creating a model interface.
 ```shell script
 mgdb i
 ```
-As a result, the `models` directory will be created in which created the [interface.go](samples/interface.md) file.
+As a result, the `models` directory will be created in which created the [interface.go](docs/interface.md) file.
 
 ```shell script
 mgdb m myInterface [path-to-dir/]mydir
 ```
-As a result, the `mydir` directory will be created in which created the [myInterface.go](samples/myInterface.md) file. Package name `mydir`.
+As a result, the `mydir` directory will be created in which created the [myInterface.go](docs/myInterface.md) file. Package name `mydir`.
 
 ### Model And Repository
 
@@ -43,7 +44,7 @@ Creating a model with repository.
 mgdb m user
 ```
 
-The files [user.go](samples/user.md) and [userRepository.go](samples/userRepository.md) will be created in the `models` directory.
+The files [user.go](docs/user.md) and [userRepository.go](docs/userRepository.md) will be created in the `models` directory.
 
 ```shell script
 mgdb m user [path-to-dir/]mydir
@@ -58,22 +59,31 @@ Creating a structure for a json column.
 mgdb j stringArray
 ```
 
-The file [stringArray.go](samples/stringArray.md) will be created in the `models` directory.
+The file [stringArray.go](docs/stringArray.md) will be created in the `models` directory.
 
 ```shell script
 mgdb m user [path-to-dir/]mydir
 ```
 Will be created in the `mydir` directory. Package name `mydir`.
 
+### Migration Tools
+
+Creating migration tools code.
+
+```shell script
+mgdb t
+```
+
+This will create the directory `mydir`, with a migration tools and [documentation](docs/migrateDocs.md).
+
+```shell script
+mgdb t [path-to-dir/]mydir
+```
+
 ## Help
 
 Any of the options:
-- `mgdb`
-- `mgdb h`
-- `mgdb -h`
-- `mgdb help`
-- `mgdb -help`
-- `mgdb --help`
+- `mgdb -h|--help`
 
 ## License
 [MIT License](LICENSE) © Roman Novikov
