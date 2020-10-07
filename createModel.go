@@ -60,6 +60,10 @@ func saveModel(dir string, data *dataModel) (err error) {
 
 func saveRepository(dir string, data *dataModel) (err error) {
 	filename := filepath.Join(dir, data.Filename+"Repository.go")
-	err = saveTemplate(filename, templates.Repository, data)
+	tmpl := templates.Repository
+	if *modelCtx {
+		tmpl = templates.RepositoryWithContext
+	}
+	err = saveTemplate(filename, tmpl, data)
 	return
 }

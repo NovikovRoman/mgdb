@@ -21,6 +21,8 @@ var (
 		Default("interface").String()
 	interfacePath = initCommand.Arg("path", "Directory path (default: "+defaultDir+").").
 		Default(defaultDir).String()
+	interfaceCtx = initCommand.Flag("context", "Interface with context.").Short('c').
+		Default("false").Bool()
 
 	jsonStructCommand = kingpin.Command("json-struct", "Creates a structure template for json columns.").
 		Alias("j")
@@ -32,6 +34,8 @@ var (
 	modelName    = modelCommand.Arg("name", "Model name.").Required().String()
 	modelPath    = modelCommand.Arg("path", "Directory path (default: "+defaultDir+").").
 		Default(defaultDir).String()
+	modelCtx = modelCommand.Flag("context", "Model with context.").Short('c').
+		Default("false").Bool()
 
 	migrateCommand = kingpin.Command("migrate", "").Alias("t")
 	migratePath    = migrateCommand.Arg("path", "Directory path (default: migrate).").

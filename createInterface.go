@@ -20,6 +20,10 @@ func createInterface() (err error) {
 		Backtick: backtick,
 	}
 
-	err = saveTemplate(filename, templates.Interface, data)
+	tmpl := templates.Interface
+	if *interfaceCtx {
+		tmpl = templates.InterfaceWithContext
+	}
+	err = saveTemplate(filename, tmpl, data)
 	return
 }

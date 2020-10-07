@@ -27,12 +27,13 @@ go build -o "mgdb" && sudo mv mgdb /usr/local/bin/
 Creating a model interface.
 
 ```shell script
-mgdb i
+mgdb i -c
 ```
+Flag `-c` - create with context.
 As a result, the `models` directory will be created in which created the [interface.go](docs/interface.md) file.
 
 ```shell script
-mgdb m myInterface [path-to-dir/]mydir
+mgdb i -c myInterface [path-to-dir/]mydir
 ```
 As a result, the `mydir` directory will be created in which created the [myInterface.go](docs/myInterface.md) file. Package name `mydir`.
 
@@ -41,14 +42,15 @@ As a result, the `mydir` directory will be created in which created the [myInter
 Creating a model with repository.
 
 ```shell script
-mgdb m user
+mgdb m -c user
 ```
-
+Flag `-c` - create with context.
 The files [user.go](docs/user.md) and [userRepository.go](docs/userRepository.md) will be created in the `models` directory.
 
 ```shell script
-mgdb m user [path-to-dir/]mydir
+mgdb m -c user [path-to-dir/]mydir
 ```
+Flag `-c` - create with context.
 Will be created in the `mydir` directory. Package name `mydir`.
 
 ### JSON Column Structure
@@ -60,11 +62,6 @@ mgdb j stringArray
 ```
 
 The file [stringArray.go](docs/stringArray.md) will be created in the `models` directory.
-
-```shell script
-mgdb m user [path-to-dir/]mydir
-```
-Will be created in the `mydir` directory. Package name `mydir`.
 
 ### Migration Tools
 
