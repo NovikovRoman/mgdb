@@ -25,6 +25,6 @@ func createJsonStruct() (err error) {
 		StructSymb: strings.ToLower(string([]rune(*jsonStructName)[0])),
 	}
 
-	err = saveTemplate(filename, templates.StringArray, data)
+	err = saveTemplate(filename, templates.StructJson, data)
 	return
 }

@@ -5,22 +5,22 @@ package models
 
 import (
     "context"
-	"database/sql"
-	"github.com/jmoiron/sqlx"
+    "database/sql"
+    "github.com/jmoiron/sqlx"
 )
 
 type UserRepository Repository
 
 func NewUserRepository(db *sqlx.DB) *UserRepository {
-	return &UserRepository{
-		db:    db,
-		table: User{}.Table(),
-	}
+    return &UserRepository{
+        db:    db,
+        table: User{}.Table(),
+    }
 }
 
 // FindByID returns a record from the database by ID.
 func (r UserRepository) FindByID(ctx context.Context, id int64) (u *User, err error) {
-	u = &User{}
+    u = &User{}
 
     query := "SELECT * FROM `"+r.table+"` WHERE `id` = ?"
     if ctx == nil {
@@ -29,16 +29,16 @@ func (r UserRepository) FindByID(ctx context.Context, id int64) (u *User, err er
         err = r.db.GetContext(ctx, u, query, id)
     }
 
-	if err == sql.ErrNoRows {
-		err = nil
-		u = nil
-	}
-	return
+    if err == sql.ErrNoRows {
+        err = nil
+        u = nil
+    }
+    return
 }
 
 // FindAll returns all records from the database.
 func (r UserRepository) FindAll(ctx context.Context) (users []*User, err error) {
-	users = []*User{}
+    users = []*User{}
 
     query := "SELECT `u`.* FROM `"+r.table+"`"
     if ctx == nil {
@@ -47,7 +47,7 @@ func (r UserRepository) FindAll(ctx context.Context) (users []*User, err error) 
         err = r.db.SelectContext(ctx, &users, query)
     }
 
-	return
+    return
 }
 
 ```

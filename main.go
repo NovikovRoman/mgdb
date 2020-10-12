@@ -24,8 +24,14 @@ var (
 	interfaceCtx = initCommand.Flag("context", "Interface with context.").Short('c').
 		Default("false").Bool()
 
+	jsonArrayCommand = kingpin.Command("json-array", "Creates a array structure template for json columns.").
+		Alias("a")
+	jsonArrayName = jsonArrayCommand.Arg("name", "Structure name.").Required().String()
+	jsonArrayPath = jsonArrayCommand.Arg("path", "Directory path (default: "+defaultDir+").").
+		Default(defaultDir).String()
+
 	jsonStructCommand = kingpin.Command("json-struct", "Creates a structure template for json columns.").
-		Alias("j")
+		Alias("s")
 	jsonStructName = jsonStructCommand.Arg("name", "Structure name.").Required().String()
 	jsonStructPath = jsonStructCommand.Arg("path", "Directory path (default: "+defaultDir+").").
 		Default(defaultDir).String()
@@ -49,6 +55,9 @@ func main() {
 	switch kingpin.Parse() {
 	case initCommand.FullCommand():
 		err = createInterface()
+
+	case jsonArrayCommand.FullCommand():
+		err = createJsonArray()
 
 	case jsonStructCommand.FullCommand():
 		err = createJsonStruct()

@@ -9,7 +9,8 @@
 - [Usage](#usage)
     - [Model Interface](#model-interface)
     - [Model And Repository](#model-and-repository)
-    - [JSON Column Structure](#json-column-structure)
+    - [Array Structure For JSON Columns](#array-structure-for-json-columns)
+    - [Structure For JSON Columns](#structure-for-json-columns)
     - [Migration Tools](#migration-tools)
 - [Help](#help)
 - [License](#license)
@@ -53,15 +54,24 @@ mgdb m -c user [path-to-dir/]mydir
 Flag `-c` - create with context.
 Will be created in the `mydir` directory. Package name `mydir`.
 
-### JSON Column Structure
+### Array Structure For JSON Columns
 
-Creating a structure for a json column.
+Creating an array structure for a json column.
 
 ```shell script
 mgdb j stringArray
 ```
 
 The file [stringArray.go](docs/stringArray.md) will be created in the `models` directory.
+
+### Structure For JSON Columns
+Creating a structure for a json column.
+
+```shell script
+mgdb j simpleStruct
+```
+
+The file [simpleStruct.go](docs/simpleStruct.md) will be created in the `models` directory.
 
 ### Migration Tools
 
