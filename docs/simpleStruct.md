@@ -12,9 +12,10 @@ import (
 )
 
 type SimpleStruct struct {
-    Field1 int
-    Field2 string
-    Field3 bool
+	DoNotSaveToDB string `db:"-"`
+	Field1        int    `db:"field1"`
+	Field2        string `db:"field2"`
+	Field3        bool   `db:"field3"`
 }
 
 func (s SimpleStruct) String() string {
