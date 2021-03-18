@@ -8,19 +8,18 @@ cd migrate && go build -o "migrate"
 migrate user:pass@tcp(localhost:3306)/dbname?parseTime=true&multiStatements=true
 {{.Backtick}}{{.Backtick}}{{.Backtick}}
 
-**Required argument:**
-- {{.Backtick}}--db=…{{.Backtick}} database connection
-
 **Optional keys:**
-- {{.Backtick}}--up, -u{{.Backtick}} migration up one step.
+- {{.Backtick}}-u{{.Backtick}} migration up. Default one step.
 
-- {{.Backtick}}--down, -d{{.Backtick}} rollback migration one step.
+- {{.Backtick}}-d{{.Backtick}} rollback migration. Default one step.
 
-- {{.Backtick}}--force=…{{.Backtick}} force the specified version of the migration. (--force=1 execute current).
+- {{.Backtick}}-sn{{.Backtick}} - {{.Backtick}}n{{.Backtick}} migration steps.
 
-Running without additional keys will launch all versions of migrations if necessary.
+- {{.Backtick}}-f{{.Backtick}} force the current version of the migration to be installed.
 
-Keys cannot be set at the same time {{.Backtick}}--up{{.Backtick}} and {{.Backtick}}--down{{.Backtick}}.
+Running without optional keys will execute all required versions of the migration.
+
+You cannot specify the keys {{.Backtick}}-u{{.Backtick}} and {{.Backtick}}-d{{.Backtick}} at the same time. Only {{.Backtick}}-u{{.Backtick}} will be executed.
 
 ## Naming Migration
 
@@ -42,85 +41,89 @@ Rollback migration:
 const MigrateMain = `package main
 
 import (
-    "database/sql"
-    _ "github.com/go-sql-driver/mysql"
-    "github.com/golang-migrate/migrate/v4"
-    "github.com/golang-migrate/migrate/v4/database/mysql"
-    _ "github.com/golang-migrate/migrate/v4/source/file"
-    log "github.com/sirupsen/logrus"
-    "gopkg.in/alecthomas/kingpin.v2"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database"
+	"github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (
-    dbConn = kingpin.Arg("db", "Подключение к БД").Required().String()
-    down   = kingpin.Flag("down", "Миграция назад на 1 шаг").Short('d').
-        Default("false").Bool()
-    up = kingpin.Flag("up", "Миграция вперед на 1 шаг").Short('u').
-        Default("false").Bool()
-    force = kingpin.Arg("force", "Принудительно выполнить version").
-        Default("").Uint()
+	// Подключение к БД
+	dbConn = kingpin.Arg("db", "Подключение к БД.").String()
+	up     = kingpin.Flag("up", "Миграция вперед.").Short('u').Bool()
+	down   = kingpin.Flag("down", "Миграция назад.").Short('d').Bool()
+	step   = kingpin.Flag("step", "Количество шагов.").Short('s').Default("1").Int()
+	force  = kingpin.Flag("force", "Принудительно выполнить текущую version.").Bool()
 )
 
 func main() {
-    kingpin.HelpFlag.Short('h')
-    kingpin.Parse()
+	var (
+		err     error
+		db      *sql.DB
+		driver  database.Driver
+		m       *migrate.Migrate
+		version uint
+	)
 
-    if *down && *up {
-        log.Fatalln("Выберите одно направление миграции (--up или --down)")
-    }
+	kingpin.HelpFlag.Short('h')
+	kingpin.Parse()
 
-    db, err := sql.Open("mysql", *dbConn)
-    if err != nil {
-        log.Fatalln(err)
-    }
+	if *dbConn == "" {
+		log.Fatalln("db variable not set.")
+	}
 
-    defer func() {
-        if err := db.Close(); err != nil {
-            log.Fatal(err)
-        }
-    }()
+	if db, err = sql.Open("mysql", *dbConn); err != nil {
+		log.Fatalln(err)
+	}
 
-    driver, err := mysql.WithInstance(db, &mysql.Config{
-        MigrationsTable: "schema_migrations",
-        DatabaseName:    "migrations",
-    })
-    if err != nil {
-        log.Fatalln(err)
-    }
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
-    m, err := migrate.NewWithDatabaseInstance(
-        "file://migrations",
-        "migrations", driver)
-    if err != nil {
-        log.Fatalln(err)
-    }
+	driver, err = mysql.WithInstance(db, &mysql.Config{
+		MigrationsTable: "schema_migrations",
+		DatabaseName:    "migrations",
+	})
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-    if *force != 0 {
-        version := *force
-        if *force > 1 {
-            if version, _, err = m.Version(); err != nil {
-                log.Fatalln(err)
-            }
-        }
+	m, err = migrate.NewWithDatabaseInstance(
+		"file://../migrations",
+		"migrations", driver)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-        if err = m.Force(int(version)); err != nil {
-            log.Fatalln(err)
-        }
-    }
+	if *force {
+		version, _, err = m.Version()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if err = m.Force(int(version)); err != nil {
+			log.Fatalln(err)
+		}
+	}
 
-    if *down {
-        err = m.Steps(-1)
+	if *up {
+		err = m.Steps(*step)
 
-    } else if *up {
-        err = m.Steps(1)
+	} else if *down {
+		err = m.Steps(-*step)
 
-    } else {
-        err = m.Up()
-    }
+	} else {
+		err = m.Up()
+	}
 
-    if err != nil {
-        log.Fatalln(err)
-    }
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 `
 

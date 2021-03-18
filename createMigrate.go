@@ -1,14 +1,19 @@
 package main
 
-import "github.com/NovikovRoman/gmdb/templates"
+import (
+	"github.com/NovikovRoman/gmdb/templates"
+	"path/filepath"
+)
 
 func createMigrate() (err error) {
 	const sqlDir = "/migrations"
 
+	pathSql := filepath.Join(*migratePath, "..", sqlDir)
+
 	if err = createDir(*migratePath); err != nil {
 		return err
 	}
-	if err = createDir(*migratePath + sqlDir); err != nil {
+	if err = createDir(pathSql); err != nil {
 		return err
 	}
 
@@ -26,11 +31,13 @@ func createMigrate() (err error) {
 		return
 	}
 
-	err = saveTemplate(*migratePath+sqlDir+"/202005041600_proxy.up.sql", templates.MigrateUpSql, data)
+	err = saveTemplate(
+		filepath.Join(pathSql, "202005041600_proxy.up.sql"), templates.MigrateUpSql, data)
 	if err != nil {
 		return
 	}
 
-	err = saveTemplate(*migratePath+sqlDir+"/202005041600_proxy.down.sql", templates.MigrateDownSql, data)
+	err = saveTemplate(
+		filepath.Join(pathSql, "202005041600_proxy.down.sql"), templates.MigrateDownSql, data)
 	return
 }
