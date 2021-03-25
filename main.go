@@ -110,17 +110,17 @@ func saveTemplate(filename string, tmpl string, data interface{}) (err error) {
 		return
 	}
 
-	f, err = os.Create(filename)
-	if err != nil {
+	if f, err = os.Create(filename); err != nil {
 		return
 	}
 
+	defer func() {
+		if derr := f.Close(); derr != nil {
+			err = derr
+		}
+	}()
+
 	t := template.Must(template.New("").Parse(tmpl))
 	err = t.Execute(f, data)
-
-	ferr := f.Close()
-	if err == nil {
-		err = ferr
-	}
 	return
 }
