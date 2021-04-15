@@ -15,6 +15,7 @@ type {{.Model}} struct {
 }
 
 // interface model -----------------------------
+
 func ({{.ModelSymb}} {{.Model}}) Table() string {
 	return "{{.TableName}}"
 }
